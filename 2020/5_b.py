@@ -10,7 +10,7 @@ for seat in seats:
     print(seat)
 for line in Lines:
     print("{}".format(line.strip()))
-    front_back = line[0:6]
+    front_back = line[0:7]
     left_right = line[7:]
     #print("{} and {}".format(front_back, left_right))
     row = 0
