@@ -11,13 +11,12 @@ one_gap = 0
 total = 1
 for jolt in jolts:
     if jolt - previous == 1:
-
         one_gap += 1
         print("found jolt {}, onegap = {}".format(jolt, one_gap))
     else:
-        print("found jolt {}, breaking and multiplying by {}".format(jolt, 2 ** max(0, (one_gap - 1))))
+        print("found jolt {}, breaking and multiplying by {}".format(jolt, ((2 ** max(0, (one_gap - 1))) - max(0, one_gap - 3))))
 
-        total = total * 2 ** max(0, (one_gap - 1))
+        total = total * ((2 ** max(0, (one_gap - 1))) - max(0, one_gap - 3))
         one_gap = 0
     previous = jolt
 
