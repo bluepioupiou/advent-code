@@ -4,17 +4,18 @@ Lines = file.readlines()
 
 # Strips the newline character
 seats = [[seat for seat in line.strip()] for line in Lines]
-print("".join(["".join(row) for row in seats]))
-print("{}".format(seats))
+print("from \n{}".format("\n".join(["".join(row) for row in seats])))
 while True:
     result = []
     for i, row in enumerate(seats):
         new_row = []
         for j, seat in enumerate(row):
             occupied = 0
+            #print("inspecting neighbors for cell {}-{}:{}".format(i, j, seat))
             for x, y in list(itertools.product(range(-1, 2), range(-1, 2))):
-                if x != 0 and y != 0:
-                    if 0 < i + x < len(seats) and 0 < j + y < len(row):
+                if x != 0 or y != 0:
+                    if 0 <= (i + x) < len(seats) and 0 <= (j + y) < len(row):
+                        #print("-- neighbor {}/{}:{}".format(i + x, j + y, seats[i + x][j + y]))
                         neighbour = seats[i+x][j+y]
                         if neighbour == "#":
                             occupied += 1
