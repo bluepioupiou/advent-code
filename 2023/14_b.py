@@ -1,83 +1,108 @@
 import re
 import functools
 import itertools
-file = open('14.txt', 'r')
-lines = file.readlines()
 
 
 def change_in_pattern(pattern, row, column, char):
     pattern[row] = pattern[row][:column] + char + pattern[row][column + 1:]
 
 
+def move_north(pattern):
+    for row, line in enumerate(pattern):
+        pattern[row] = line.strip()
+        for col, char in enumerate(line):
+            # print(f" - Annalysing {row}/{col}")
+            if char == "O":
+                new_row = row
+                while new_row > 0 and pattern[new_row - 1][col] == ".":
+                    new_row -= 1
+                # print(f" - found O at {row}/{col} new row to slide {new_row}")
+                change_in_pattern(pattern, row, col, ".")
+                change_in_pattern(pattern, new_row, col, "O")
+
+
+def move_west(pattern):
+    for row, line in enumerate(pattern):
+        pattern[row] = line.strip()
+        for col, char in enumerate(line):
+            # print(f" - Annalysing {row}/{col}")
+            if char == "O":
+                new_col = col
+                while new_col > 0 and pattern[row][new_col - 1] == ".":
+                    new_col -= 1
+                # print(f" - found O at {row}/{col} new row to slide {new_row}")
+                change_in_pattern(pattern, row, col, ".")
+                change_in_pattern(pattern, row, new_col, "O")
+
+
+def calculate_weight(pattern):
+    total = 0
+    for row, line in enumerate(pattern):
+        total += line.count("O") * (len(pattern) - row)
+    return total
+
+
+def display_pattern(pattern):
+    for line in pattern:
+        print(line)
+
+
+def do_cycle(pattern):
+    # North
+    move_north(pattern)
+    # print("After North")
+    # display_pattern(lines)
+
+    # West
+    move_west(pattern)
+    # print("After West")
+    # display_pattern(lines)
+
+    # South
+    pattern.reverse()
+    move_north(pattern)
+    pattern.reverse()
+    # print("After South")
+    # display_pattern(lines)
+
+    # East
+    for row, line in enumerate(pattern):
+        pattern[row] = line[::-1]
+    move_west(pattern)
+    for row, line in enumerate(pattern):
+        pattern[row] = line[::-1]
+    # print("After East")
+
+
 if __name__ == '__main__':
-    for i in range(3):
-        total = 0
+    file = open('14.txt', 'r')
+    lines = file.readlines()
 
-        # North
-        for row, line in enumerate(lines):
-            lines[row] = line.strip()
-            for col, char in enumerate(line):
-                #print(f" - Annalysing {row}/{col}")
-                if char == "O":
-                    new_row = row
-                    while new_row > 0 and lines[new_row - 1][col] == ".":
-                        new_row -= 1
-                    #print(f" - found O at {row}/{col} new row to slide {new_row}")
-                    change_in_pattern(lines, row, col, ".")
-                    change_in_pattern(lines, new_row, col, "O")
-        print("After North")
-        for row, line in enumerate(lines):
-            print(line)
-        # West
-        for row, line in enumerate(lines):
-            lines[row] = line.strip()
-            for col, char in enumerate(line):
-                # print(f" - Annalysing {row}/{col}")
-                if char == "O":
-                    new_col = col
-                    while new_col > 0 and lines[row][new_col - 1] == ".":
-                        new_col -= 1
-                    # print(f" - found O at {row}/{col} new row to slide {new_row}")
-                    change_in_pattern(lines, row, col, ".")
-                    change_in_pattern(lines, row, new_col, "O")
+    for i in range(1, 1000):
+        do_cycle(lines)
 
-        print("After West")
-        for row, line in enumerate(lines):
-            print(line)
+        total = calculate_weight(lines)
+        #print(f"iter {i} total {total}")
+        #display_pattern(lines)
 
-        # South
-        for row, line in enumerate(lines):
-            lines[row] = line.strip()
-            for col, char in enumerate(line):
-                # print(f" - Annalysing {row}/{col}")
-                if char == "O":
-                    new_row = row
-                    while new_row < len(lines) -1  and lines[new_row + 1][col] == ".":
-                        new_row += 1
-                    # print(f" - found O at {row}/{col} new row to slide {new_row}")
-                    change_in_pattern(lines, row, col, ".")
-                    change_in_pattern(lines, new_row, col, "O")
+    stabilized = False
+    suite = [calculate_weight(lines)]
+    new_suite = []
+    print(f"Trying to find suite")
+    while not stabilized:
+        i =+ 1
+        do_cycle(lines)
+        new_suite.append(calculate_weight(lines))
+        if new_suite == suite[:len(new_suite)] and len(suite) > 3:
+            print(f"Finding {new_suite} into {suite}")
+            if new_suite == suite:
+                print(f"Found suite : {suite}")
+                break
+            continue
+        else:
+            suite += new_suite
+            new_suite = []
+        print(f"suite {suite}")
 
-        print("After South")
-        for row, line in enumerate(lines):
-            print(line)
-
-        # East
-        for row, line in enumerate(lines):
-            lines[row] = line.strip()
-            for col, char in enumerate(line):
-                # print(f" - Annalysing {row}/{col}")
-                if char == "O":
-                    new_col = col
-                    while new_col < len(line) - 1 and lines[row][new_col + 1] == ".":
-                        new_col += 1
-                    # print(f" - found O at {row}/{col} new row to slide {new_row}")
-                    change_in_pattern(lines, row, col, ".")
-                    change_in_pattern(lines, row, new_col, "O")
-
-        print("After East")
-        for row, line in enumerate(lines):
-            print(line)
-            total += line.count("O") * (len(lines) - row)
-
-        print(f"After {i} : {total}")
+    result = suite[(1000000000 - i) % len(suite)]
+    print(result)
