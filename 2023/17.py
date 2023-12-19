@@ -9,20 +9,6 @@ class Part:
         self.a = numbers[2]
         self.s = numbers[3]
 
-    def get(self, letter):
-        if letter == "x":
-            return self.x
-        if letter == "m":
-            return self.m
-        if letter == "a":
-            return self.a
-        if letter == "s":
-            return self.s
-
-
-    def total(self):
-        return int(self.x) + int(self.m) + int(self.a) + int(self.s)
-
     def __str__(self):
         return f"x: {self.x}, m: {self.m}, a: {self.a}, s: {self.s}"
 
@@ -45,12 +31,14 @@ class Workflow:
     def get_output(self, part: Part):
         for rule in self.rules[:-1]:
             condition, output = rule.split(":")
-            condition = part.get(condition[0]) + condition[1:]
-            print(f"condition : {condition}")
+            condition.replace("x", part.x)
+            condition.replace("m", part.m)
+            condition.replace("a", part.a)
+            condition.replace("s", part.s)
+            print(f"condition > {condition}")
             if eval(condition):
                 return output
-        return self.rules[-1]
-
+        return rules[-1]
 
 if __name__ == '__main__':
     file = open('19.txt', 'r')
@@ -66,15 +54,16 @@ if __name__ == '__main__':
         elif line.endswith("}"):
             name, rules = line.split("{")
             workflows[name] = (Workflow(name, rules[:-1]))
+
     for part in parts:
-        print(f"Evaluating part {part}")
-        output = "in"
+        print(f"Evaluating part ")
+        actual_workflow = workflows["in"]
+        output = None
         while output not in ["A", "R"]:
-            actual_workflow = workflows[output]
+
             output = actual_workflow.get_output(part)
-            print(f" - with workflow {actual_workflow}, output {output}")
-        if output == "A":
-            result += part.total()
+            actual_workflow = workflows[output]
+
     print(parts)
     print(workflows)
     print(f"Result { result}")
