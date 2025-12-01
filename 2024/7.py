@@ -18,7 +18,8 @@ if __name__ == '__main__':
                     new_possibilities.append(possibility + number)
                     new_possibilities.append(possibility * number)
                 possibilities = new_possibilities
-        #print(f"For test valie {test_value}, possibilities = {possibilities}")
+        print(f"For test valie {test_value}, possibilities = {possibilities}")
         if int(test_value) in possibilities:
             total += int(test_value)
     print(total)
+
