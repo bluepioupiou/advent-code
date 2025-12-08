@@ -7,6 +7,17 @@ DIRECTIONS = {
     "RIGHT": (0, 1)
 }
 
+EIGHT_DIRECTIONS = {
+    "UP": (-1, 0),
+    "UP-LEFT": (-1, -1),
+    "UP-RIGHT": (-1, 1),
+    "DOWN": (1, 0),
+    "DOWN-LEFT": (1, -1),
+    "DOWN-RIGHT": (1, 1),
+    "LEFT": (0, -1),
+    "RIGHT": (0, 1)
+}
+
 INSTRUCTIONS = {
     "LEFT": '<',
     "RIGHT": '>',
@@ -14,7 +25,7 @@ INSTRUCTIONS = {
     "DOWN": 'v'
 }
 
-ENABLED_LOG = True
+ENABLED_LOG = False
 
 
 def log(text):
@@ -95,9 +106,9 @@ class Grid:
             if tile == char:
                 return position
 
-    def neighbours(self, position):
+    def neighbours(self, position, directions=DIRECTIONS):
         neighbours = []
-        for direction in DIRECTIONS.values():
+        for direction in directions.values():
             neighbor = position.move_with_direction(direction)
             if self.has(neighbor):
                 neighbours.append(neighbor)

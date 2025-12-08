@@ -1,5 +1,4 @@
 from utils import log
-import math
 
 if __name__ == '__main__':
     file = open('1.txt', 'r')
@@ -20,7 +19,7 @@ if __name__ == '__main__':
         # Si ils n'ont pas le meme signe c'est qu'est passé par 0
         if previous_position * position < 0:
             number_of_zeros += 1
-        # On rajoute le nombre de fois on est passé par 0
+        # On rajoute le nombre de fois on la limite est passée ensuite
         number_of_zeros += abs(position) // 100
         if position == 0:
             number_of_zeros += 1
