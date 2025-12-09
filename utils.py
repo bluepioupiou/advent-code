@@ -25,7 +25,7 @@ INSTRUCTIONS = {
     "DOWN": 'v'
 }
 
-ENABLED_LOG = False
+ENABLED_LOG = True
 
 
 def log(text):
@@ -77,7 +77,7 @@ class Grid:
     def __init__(self, lines):
         self.rows = []
         for line in lines:
-            self.rows.append([c for c in line.replace("\n", "")])
+            self.rows.append([c for c in line])
         self.width = len(self.rows[0])
         self.height = len(self.rows)
 
@@ -105,6 +105,13 @@ class Grid:
         for tile, position in self.scan():
             if tile == char:
                 return position
+
+    def find_all(self, char):
+        positions = []
+        for tile, position in self.scan():
+            if tile == char:
+                positions.append(position)
+        return positions
 
     def neighbours(self, position, directions=DIRECTIONS):
         neighbours = []
